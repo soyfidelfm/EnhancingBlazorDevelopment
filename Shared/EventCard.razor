@@ -1,20 +1,20 @@
 @code {
-    [Parameter] public string? Name { get; set; }
-    [Parameter] public DateTime Date { get; set; }
-    [Parameter] public string? Location { get; set; }
+    [Parameter, EditorRequired] public string Name { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public DateTime Date { get; set; }
+    [Parameter, EditorRequired] public string Location { get; set; } = string.Empty;
 }
 
 <div class="event-card">
-    <h4>@Name</h4>
-    <p><strong>Fecha:</strong> @Date.ToShortDateString()</p>
-    <p><strong>Lugar:</strong> @Location</p>
+    <h4>@(string.IsNullOrWhiteSpace(Name) ? "Nombre no disponible" : Name)</h4>
+    <p><strong>Fecha:</strong> @(Date == default ? "Fecha no disponible" : Date.ToShortDateString())</p>
+    <p><strong>Ubicación:</strong> @(string.IsNullOrWhiteSpace(Location) ? "Ubicación no disponible" : Location)</p>
 </div>
 
 <style>
     .event-card {
         border: 1px solid #ccc;
         padding: 10px;
-        margin: 10px;
+        margin: 5px;
         border-radius: 5px;
         background-color: #f9f9f9;
     }

@@ -1,53 +1,82 @@
 @page "/events"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+
 
 <h3>Lista de Eventos</h3>
 
 <!-- Formulario para agregar eventos -->
-<div>
-    <label>Nombre del Evento:</label>
-    <input @bind="newEvent.Name" />
+<EditForm Model="@newEvent" OnValidSubmit="AddEvent">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-    <label>Fecha:</label>
-    <input type="date" @bind="newEvent.Date" />
+    <div>
+        <label>Nombre del Evento:</label>
+        <InputText @bind-Value="newEvent.Name" />
+        <ValidationMessage For="@(() => newEvent.Name)" />
+    </div>
 
-    <label>Ubicación:</label>
-    <input @bind="newEvent.Location" />
+    <div>
+        <label>Fecha:</label>
+        <InputDate @bind-Value="newEvent.Date" />
+        <ValidationMessage For="@(() => newEvent.Date)" />
+    </div>
 
-    <button @onclick="AddEvent">Agregar Evento</button>
-</div>
+    <div>
+        <label>Ubicación:</label>
+        <InputText @bind-Value="newEvent.Location" />
+        <ValidationMessage For="@(() => newEvent.Location)" />
+    </div>
 
-<!-- Lista de Eventos -->
-@if (events == null || events.Count == 0)
+    <button type="submit">Agregar Evento</button>
+</EditForm>
+
+<!-- Mensaje de éxito o error -->
+@if (!string.IsNullOrEmpty(message))
 {
-    <p>No hay eventos aún. Agrega uno.</p>
+    <p>@message</p>
 }
-else
+
+<!-- Lista de Eventos usando foreach -->
+@if (events.Any())
 {
     <div>
         @foreach (var eventItem in events)
         {
-            var eventIndex = events.IndexOf(eventItem);
             <EventCard Name="@eventItem.Name" Date="@eventItem.Date" Location="@eventItem.Location" />
-            <NavLink href="@($"/event-details/{eventIndex}")">Ver Detalles</NavLink>
+            <a href="/event-details/@eventItem.Id">Ver Detalles</a>
         }
     </div>
+}
+else
+{
+    <p>No hay eventos disponibles.</p>
 }
 
 @code {
     private List<EventModel> events = new List<EventModel>();
-
     private EventModel newEvent = new EventModel();
+    private string? message;
 
     private void AddEvent()
     {
-        // Agrega el nuevo evento a la lista y reinicia el formulario
+        if (string.IsNullOrWhiteSpace(newEvent.Name) || string.IsNullOrWhiteSpace(newEvent.Location))
+        {
+            message = "Todos los campos son obligatorios.";
+            return;
+        }
+
+        // Agregar evento a la lista manualmente
         events.Add(new EventModel
         {
+            Id = events.Count + 1,
             Name = newEvent.Name,
             Date = newEvent.Date,
             Location = newEvent.Location
         });
 
-        newEvent = new EventModel(); // Reiniciar el formulario
+        // Reiniciar el formulario
+        newEvent = new EventModel();
+        message = "Evento agregado correctamente.";
     }
 }

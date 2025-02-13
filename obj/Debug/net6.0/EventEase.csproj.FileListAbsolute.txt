@@ -32,3 +32,4 @@ C:\Users\fidel\EventEase\obj\Debug\net6.0\refint\EventEase.dll
 C:\Users\fidel\EventEase\obj\Debug\net6.0\EventEase.pdb
 C:\Users\fidel\EventEase\obj\Debug\net6.0\EventEase.genruntimeconfig.cache
 C:\Users\fidel\EventEase\obj\Debug\net6.0\ref\EventEase.dll
+C:\Users\fidel\EventEase\obj\Debug\net6.0\EventEase.sourcelink.json
