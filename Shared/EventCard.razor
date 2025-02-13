@@ -1,0 +1,21 @@
+@code {
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public DateTime Date { get; set; }
+    [Parameter] public string? Location { get; set; }
+}
+
+<div class="event-card">
+    <h4>@Name</h4>
+    <p><strong>Fecha:</strong> @Date.ToShortDateString()</p>
+    <p><strong>Lugar:</strong> @Location</p>
+</div>
+
+<style>
+    .event-card {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+</style>

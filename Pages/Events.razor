@@ -1,0 +1,53 @@
+@page "/events"
+
+<h3>Lista de Eventos</h3>
+
+<!-- Formulario para agregar eventos -->
+<div>
+    <label>Nombre del Evento:</label>
+    <input @bind="newEvent.Name" />
+
+    <label>Fecha:</label>
+    <input type="date" @bind="newEvent.Date" />
+
+    <label>Ubicación:</label>
+    <input @bind="newEvent.Location" />
+
+    <button @onclick="AddEvent">Agregar Evento</button>
+</div>
+
+<!-- Lista de Eventos -->
+@if (events == null || events.Count == 0)
+{
+    <p>No hay eventos aún. Agrega uno.</p>
+}
+else
+{
+    <div>
+        @foreach (var eventItem in events)
+        {
+            var eventIndex = events.IndexOf(eventItem);
+            <EventCard Name="@eventItem.Name" Date="@eventItem.Date" Location="@eventItem.Location" />
+            <NavLink href="@($"/event-details/{eventIndex}")">Ver Detalles</NavLink>
+        }
+    </div>
+}
+
+@code {
+    private List<EventModel> events = new List<EventModel>();
+
+    private EventModel newEvent = new EventModel();
+
+    private void AddEvent()
+    {
+        // Agrega el nuevo evento a la lista y reinicia el formulario
+        events.Add(new EventModel
+        {
+            Name = newEvent.Name,
+            Date = newEvent.Date,
+            Location = newEvent.Location
+        });
+
+        newEvent = new EventModel(); // Reiniciar el formulario
+    }
+}

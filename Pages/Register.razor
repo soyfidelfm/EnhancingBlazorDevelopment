@@ -1,0 +1,20 @@
+@page "/register"
+
+<h3>Registro de Evento</h3>
+
+<label>Nombre:</label>
+<input @bind="attendeeName" />
+
+<button @onclick="RegisterAttendee">Registrarse</button>
+
+<p>@message</p>
+
+@code {
+    private string? attendeeName;
+    private string? message;
+
+    private void RegisterAttendee()
+    {
+        message = $"Gracias por registrarte, {attendeeName}!";
+    }
+}

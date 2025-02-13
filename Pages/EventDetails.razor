@@ -1,0 +1,35 @@
+@page "/event-details/{eventId:int}"
+
+<h3>Detalles del Evento</h3>
+
+@if (selectedEvent == null)
+{
+    <p>Cargando evento...</p>
+}
+else
+{
+    <div>
+        <h4>@selectedEvent.Name</h4>
+        <p><strong>Fecha:</strong> @selectedEvent.Date.ToShortDateString()</p>
+        <p><strong>Ubicación:</strong> @selectedEvent.Location</p>
+        <NavLink href="/events">Regresar a la lista</NavLink>
+    </div>
+}
+
+@code {
+    [Parameter] public int eventId { get; set; }
+
+    private EventModel? selectedEvent;
+
+    private List<EventModel> events = new List<EventModel>
+    {
+        new EventModel { Name = "Tech Conference 2025", Date = new DateTime(2025, 5, 15), Location = "CDMX" },
+        new EventModel { Name = "Feria de Innovación", Date = new DateTime(2025, 6, 10), Location = "Monterrey" },
+        new EventModel { Name = "Startup Pitch Day", Date = new DateTime(2025, 7, 20), Location = "Guadalajara" }
+    };
+
+    protected override void OnInitialized()
+    {
+        selectedEvent = events.FirstOrDefault(e => events.IndexOf(e) == eventId);
+    }
+}
