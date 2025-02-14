@@ -1,0 +1,89 @@
+@page "/attendance"
+@using System.ComponentModel.DataAnnotations
+
+<h3>Registro de Asistencias</h3>
+
+<!-- Formulario para marcar asistencia -->
+<EditForm Model="@newAttendance" OnValidSubmit="RegisterAttendance">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nombre del Asistente:</label>
+        <InputText @bind-Value="newAttendance.UserName" />
+        <ValidationMessage For="@(() => newAttendance.UserName)" />
+    </div>
+
+    <div>
+        <label>Evento:</label>
+        <InputText @bind-Value="newAttendance.EventName" />
+        <ValidationMessage For="@(() => newAttendance.EventName)" />
+    </div>
+
+    <div>
+        <label>Fecha:</label>
+        <InputDate @bind-Value="newAttendance.Timestamp" />
+        <ValidationMessage For="@(() => newAttendance.Timestamp)" />
+    </div>
+
+    <button type="submit">Registrar Asistencia</button>
+</EditForm>
+
+<!-- Mensaje de confirmación -->
+@if (!string.IsNullOrEmpty(message))
+{
+    <p>@message</p>
+}
+
+<!-- Lista de Asistencias -->
+@if (attendanceRecords.Any())
+{
+    <h4>Asistencias Registradas</h4>
+    <ul>
+        @foreach (var record in attendanceRecords)
+        {
+            <li>@record.UserName asistió al evento "@record.EventName" el @record.Timestamp.ToShortDateString()</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No hay registros de asistencia.</p>
+}
+
+@code {
+    private List<AttendanceModel> attendanceRecords = new();
+    private AttendanceModel newAttendance = new();
+    private string? message;
+
+    private void RegisterAttendance()
+    {
+        if (string.IsNullOrWhiteSpace(newAttendance.UserName) || string.IsNullOrWhiteSpace(newAttendance.EventName))
+        {
+            message = "Todos los campos son obligatorios.";
+            return;
+        }
+
+        attendanceRecords.Add(new AttendanceModel
+        {
+            UserName = newAttendance.UserName,
+            EventName = newAttendance.EventName,
+            Timestamp = newAttendance.Timestamp
+        });
+
+        newAttendance = new AttendanceModel();
+        message = "Asistencia registrada correctamente.";
+    }
+
+    public class AttendanceModel
+    {
+        [Required(ErrorMessage = "El nombre es obligatorio")]
+        public string UserName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "El evento es obligatorio")]
+        public string EventName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La fecha es obligatoria")]
+        public DateTime Timestamp { get; set; } = DateTime.Now;
+    }
+}
